@@ -11,8 +11,8 @@ import org.json.JSONObject
 
 class MovieViewModel : ViewModel() {
     companion object {
-        //private const val API_KEY = "b9f348cb3669613861ca4cd300c88fd4"
-        private const val API_KEY = "5d26e368e770364acb046cd589e1e619"
+        private const val API_KEY = "b9f348cb3669613861ca4cd300c88fd4"
+        //private const val API_KEY = "5d26e368e770364acb046cd589e1e619"
     }
 
     val listMovies = MutableLiveData<ArrayList<MovieItems>>()
@@ -20,9 +20,9 @@ class MovieViewModel : ViewModel() {
     internal fun setMovie() {
         val client = AsyncHttpClient()
         val listItems = ArrayList<MovieItems>()
-        //val url = "https://api.themoviedb.org/3/discover/movie?api_key=$API_KEY&language=en-US&page=3"
         val url =
-            "https://api.openweathermap.org/data/2.5/group?id=1650357&units=metric&appid=$API_KEY"
+            "https://api.themoviedb.org/3/discover/movie?api_key=$API_KEY&language=en-US&page=3"
+        //val url = "https://api.openweathermap.org/data/2.5/group?id=1650357&units=metric&appid=$API_KEY"
 
         client.get(url, object : AsyncHttpResponseHandler() {
             override fun onSuccess(
@@ -33,16 +33,16 @@ class MovieViewModel : ViewModel() {
                 try {
                     val result = String(responseBody)
                     val responObject = JSONObject(result)
-                    //val list = responObject.getJSONArray("results")
-                    val list = responObject.getJSONArray("list")
+                    val list = responObject.getJSONArray("results")
+                    //val list = responObject.getJSONArray("list")
 
                     for (i in 0 until list.length()) {
                         val movie = list.getJSONObject(i)
                         val movieItems = MovieItems()
                         movieItems.id = movie.getInt("id")
-                        movieItems.title = movie.getString("name")
-                        movieItems.date_release = movie.getString("name")
-                        movieItems.description = movie.getString("name")
+                        movieItems.title = movie.getString("title")
+                        movieItems.date_release = movie.getString("release_date")
+                        movieItems.description = movie.getString("overview")
                         listItems.add(movieItems)
                     }
                     listMovies.postValue(listItems)
